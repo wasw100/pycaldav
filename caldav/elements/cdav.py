@@ -124,3 +124,13 @@ class MaxInstances(ValuedBaseElement):
 
 class MaxAttendeesPerInstance(ValuedBaseElement):
     tag = ns("C", "max-attendees-per-instance")
+
+
+#add at 2014-09
+class CalendarMultiget(BaseElement):
+    tag = ns("C", "calendar-multiget")
+
+
+class ScheduleTag(BaseElement):
+    tag = ns("C", "schedule-tag")
+

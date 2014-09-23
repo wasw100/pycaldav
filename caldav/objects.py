@@ -70,7 +70,7 @@ class DAVObject(object):
 
         for r in response.tree.findall(dav.Response.tag):
             # We use canonicalized urls to index children
-            href = str(self.url.join(URL.objectify(r.find(dav.Href.tag).text)).canonical())
+            href = str(self.url.join(URL.objectify(r.find(dav.Href.tag).text)))
             assert(href)
             properties[href] = {}
             for p in props:

@@ -59,3 +59,16 @@ class Status(BaseElement):
 class CurrentUserPrincipal(BaseElement):
     tag = ns("D", "current-user-principal")
 
+
+#add 2014-9
+class SyncToken(BaseElement):
+    tag = ns("D", "sync-token")
+
+
+class GetETag(BaseElement):
+    tag = ns("D", 'getetag')
+
+
+class GetContentType(BaseElement):
+    tag = ns("D", 'getcontenttype')
+

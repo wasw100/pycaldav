@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
 from setuptools import setup, find_packages
 
-version = '0.2.1'
+version = '0.0.1'
 
 if __name__ == '__main__':
     setup(
-        name='caldav',
+        name='pycaldav',
         version=version,
         description="CalDAV (RFC4791) client library",
         classifiers=["Development Status :: 4 - Beta",
@@ -19,12 +19,12 @@ if __name__ == '__main__':
                      "Topic :: Software Development :: Libraries "
                      ":: Python Modules"],
         keywords='',
-        author='Cyril Robert',
-        author_email='cyril@hippie.io',
-        url='http://bitbucket.org/cyrilrbt/caldav',
+        author='wasw100',
+        author_email='wasw100@gmail.com',
+        url='https://github.com/wasw100/pycaldav',
         license='GPL',
         packages=find_packages(),
         include_package_data=True,
         zip_safe=False,
-        install_requires=['vobject', 'lxml', 'nose', 'coverage', 'sphinx'],
+        install_requires=['vobject', 'lxml', 'nose', 'coverage', 'sphinx', 'requests'],
     )
