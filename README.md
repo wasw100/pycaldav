@@ -1,6 +1,6 @@
 #pycaldav#
 
-<https://pypi.python.org/pypi/caldav/0.2.1> 以https://pypi.python.org/pypi/caldav/0.2.1为基础
+<https://pypi.python.org/pypi/caldav/0.2.1> 以<https://pypi.python.org/pypi/caldav/0.2.1>为基础
 
 代码来源: <https://bitbucket.org/cyrilrbt/caldav/>
 
