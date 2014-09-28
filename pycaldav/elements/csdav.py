@@ -22,10 +22,6 @@ class AllowedSharingModes(BaseElement):
     tag = ns("cs", "allowed-sharing-modes")
 
 
-class Getctag(BaseElement):
-    tag = ns("cs", "getctag")
-
-
 class PrePublishUrl(BaseElement):
     tag = ns("cs", "pre-publish-url")
 

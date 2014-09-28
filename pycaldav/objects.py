@@ -232,56 +232,52 @@ class CalendarSet(DAVObject):
         return cals
 
     def calendars(self):
-        calendar_tag = cdav.Calendar.tag
-        props = [dav.AddMember(), csdav.AllowedSharingModes(), icaldav.AutoProvisioned(),
-                 icaldav.CalendarColor(), cdav.CalendarDescription(), cdav.CalendarFreeBusySet(),
-                 icaldav.CalendarOrder(), cdav.CalendarTimeZone(), dav.CurrentUserPrivilegeSet(),
-                 cdav.DefaultAlarmVeventDate(), cdav.DefaultAlarmVeventDatetime(), dav.DisplayName(),
-                 csdav.Getctag(), icaldav.LanguageCode(), icaldav.LocationCode(), dav.Owner(),
-                 csdav.PrePublishUrl(), csdav.PublishUrl(), csdav.PushTransports(), csdav.Pushkey(),
-                 dav.QuotaAvailableBytes(), dav.QuotaUsedBytes(), icaldav.RefreshRate(), dav.ResourceId(),
-                 dav.ResourceType(), cdav.ScheduleCalendarTransp(), cdav.ScheduleDefaultCalendarUrl(),
-                 csdav.Source(), csdav.SubscribedStripAlarms(), csdav.SubscribedStripAttachments(),
-                 csdav.SubscribedStripTodos(), cdav.SupportedCalendarComponentSet(),
-                 cdav.SupportedCalendarComponentSets(), dav.SupportedReportSet(), dav.SyncToken()
+        props = [
+            dav.AddMember(), csdav.AllowedSharingModes(), icaldav.AutoProvisioned(),
+            icaldav.CalendarColor(), cdav.CalendarDescription(), cdav.CalendarFreeBusySet(),
+            icaldav.CalendarOrder(), cdav.CalendarTimeZone(), dav.CurrentUserPrivilegeSet(),
+            cdav.DefaultAlarmVeventDate(), cdav.DefaultAlarmVeventDatetime(), dav.DisplayName(),
+            csdav.GetCTag(), icaldav.LanguageCode(), icaldav.LocationCode(), dav.Owner(),
+            csdav.PrePublishUrl(), csdav.PublishUrl(), csdav.PushTransports(), csdav.Pushkey(),
+            dav.QuotaAvailableBytes(), dav.QuotaUsedBytes(), icaldav.RefreshRate(), dav.ResourceId(),
+            dav.ResourceType(), cdav.ScheduleCalendarTransp(), cdav.ScheduleDefaultCalendarUrl(),
+            csdav.Source(), csdav.SubscribedStripAlarms(), csdav.SubscribedStripAttachments(),
+            csdav.SubscribedStripTodos(), cdav.SupportedCalendarComponentSet(),
+            cdav.SupportedCalendarComponentSets(), dav.SupportedReportSet(), dav.SyncToken(),
         ]
         depth = 1
-        properties = {}
 
         response = self._query_properties(props, depth)
-        print 'response', response
-        print response.__dict__
-        print type(response)
 
+        data = []
         for r in response.tree.findall(dav.Response.tag):
+            calendar_d = {}
             # We use canonicalized urls to index children
             path = r.find(dav.Href.tag).text
-            assert(path)
-            properties[path] = {}
+            calendar_d['path'] = path
+
+            status = r.find('.//%s' % dav.Status.tag).text
+            if not status.endswith("200 OK"):
+                continue
+
+            calendar_tag = r.find(".//%s" % dav.ResourceType.tag).find('.//%s' % cdav.Calendar.tag)
+            if calendar_tag is None:
+                continue
+
             for p in props:
                 t = r.find(".//" + p.tag)
-                if len(list(t)) > 0:
-                    if calendar_tag is not None:
-                        val = t.find(".//" + calendar_tag)
-                    else:
-                        val = t.find(".//*")
+
+                if len(t) > 0:
+                    val = t.find(".//*")
                     if val is not None:
                         val = val.tag
                     else:
                         val = None
                 else:
                     val = t.text
-                properties[path][p.tag] = val
-
-        r = []
-        for path in properties.keys():
-            resource_type = properties[path][dav.ResourceType.tag]
-            #需要的信息
-            if resource_type == calendar_tag or calendar_tag is None:
-                if self.url != self.url.join(path):
-                    props = properties[path]
-                    r.append({'path': path, 'props': props})
-        return r
+                calendar_d[p.tag] = val
+            data.append(calendar_d)
+        return data
 
     def make_calendar(self, name=None, cal_id=None):
         return Calendar(self.client, name=name, parent=self, id=cal_id).save()
