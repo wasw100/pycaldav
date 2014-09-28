@@ -1,37 +1,37 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-from caldav.lib.namespace import ns
+from pycaldav.lib.namespace import ns
 from base import BaseElement, NamedBaseElement, ValuedBaseElement
 
 
 ## Operations
 class CalendarQuery(BaseElement):
-    tag = ns("C", "calendar-query")
+    tag = ns("caldav", "calendar-query")
 
 class Mkcalendar(BaseElement):
     tag = ns("D", "mkcalendar")
 
 ## Filters
 class Filter(BaseElement):
-    tag = ns("C", "filter")
+    tag = ns("caldav", "filter")
 
 
 class CompFilter(NamedBaseElement):
-    tag = ns("C", "comp-filter")
+    tag = ns("caldav", "comp-filter")
 
 
 class PropFilter(NamedBaseElement):
-    tag = ns("C", "prop-filter")
+    tag = ns("caldav", "prop-filter")
 
 
 class ParamFilter(NamedBaseElement):
-    tag = ns("C", "param-filter")
+    tag = ns("caldav", "param-filter")
 
 
 ## Conditions
 class TextMatch(ValuedBaseElement):
-    tag = ns("C", "text-match")
+    tag = ns("caldav", "text-match")
 
     def __init__(self, value, collation="i;octet", negate=False):
         super(TextMatch, self).__init__(value=value)
@@ -42,7 +42,7 @@ class TextMatch(ValuedBaseElement):
 
 
 class TimeRange(BaseElement):
-    tag = ns("C", "time-range")
+    tag = ns("caldav", "time-range")
 
     def __init__(self, start=None, end=None):
         super(TimeRange, self).__init__()
@@ -54,16 +54,16 @@ class TimeRange(BaseElement):
 
 
 class NotDefined(BaseElement):
-    tag = ns("C", "is-not-defined")
+    tag = ns("caldav", "is-not-defined")
 
 
 ## Components / Data
 class CalendarData(BaseElement):
-    tag = ns("C", "calendar-data")
+    tag = ns("caldav", "calendar-data")
 
 
 class Expand(BaseElement):
-    tag = ns("C", "expand")
+    tag = ns("caldav", "expand")
 
     def __init__(self, start, end=None):
         super(Expand, self).__init__()
@@ -73,64 +73,87 @@ class Expand(BaseElement):
 
 
 class Comp(NamedBaseElement):
-    tag = ns("C", "comp")
+    tag = ns("caldav", "comp")
 
 
 class CalendarCollection(BaseElement):
-    tag = ns("C", "calendar-collection")
+    tag = ns("caldav", "calendar-collection")
 
 
 ## Properties
 
 class CalendarHomeSet(BaseElement):
-    tag = ns("C", "calendar-home-set")
+    tag = ns("caldav", "calendar-home-set")
 
 # calendar resource type, see rfc4791, sec. 4.2
 class Calendar(BaseElement):
-    tag = ns("C", "calendar")
+    tag = ns("caldav", "calendar")
 
 
 class CalendarDescription(ValuedBaseElement):
-    tag = ns("C", "calendar-description")
+    tag = ns("caldav", "calendar-description")
 
 
 class CalendarTimeZone(ValuedBaseElement):
-    tag = ns("C", "calendar-timezone")
+    tag = ns("caldav", "calendar-timezone")
 
 
 class SupportedCalendarComponentSet(ValuedBaseElement):
-    tag = ns("C", "supported-calendar-component-set")
+    tag = ns("caldav", "supported-calendar-component-set")
 
 
 class SupportedCalendarData(ValuedBaseElement):
-    tag = ns("C", "supported-calendar-data")
+    tag = ns("caldav", "supported-calendar-data")
 
 
 class MaxResourceSize(ValuedBaseElement):
-    tag = ns("C", "max-resource-size")
+    tag = ns("caldav", "max-resource-size")
 
 
 class MinDateTime(ValuedBaseElement):
-    tag = ns("C", "min-date-time")
+    tag = ns("caldav", "min-date-time")
 
 
 class MaxDateTime(ValuedBaseElement):
-    tag = ns("C", "max-date-time")
+    tag = ns("caldav", "max-date-time")
 
 
 class MaxInstances(ValuedBaseElement):
-    tag = ns("C", "max-instances")
+    tag = ns("caldav", "max-instances")
 
 
 class MaxAttendeesPerInstance(ValuedBaseElement):
-    tag = ns("C", "max-attendees-per-instance")
+    tag = ns("caldav", "max-attendees-per-instance")
 
 
 #add at 2014-09
 class CalendarMultiget(BaseElement):
-    tag = ns("C", "calendar-multiget")
+    tag = ns("caldav", "calendar-multiget")
 
 
 class ScheduleTag(BaseElement):
-    tag = ns("C", "schedule-tag")
+    tag = ns("caldav", "schedule-tag")
 
+
+class CalendarFreeBusySet(BaseElement):
+    tag = ns("caldav", "calendar-free-busy-set")
+
+
+class DefaultAlarmVeventDate(BaseElement):
+    tag = ns("caldav", "default-alarm-vevent-date")
+
+
+class DefaultAlarmVeventDatetime(BaseElement):
+    tag = ns("caldav", "default-alarm-vevent-datetime")
+
+
+class ScheduleCalendarTransp(BaseElement):
+    tag = ns("caldav", "schedule-calendar-transp")
+
+
+class ScheduleDefaultCalendarUrl(BaseElement):
+    tag = ns("caldav", "schedule-default-calendar-URL")
+
+
+class SupportedCalendarComponentSets(BaseElement):
+    tag = ns("caldav", "supported-calendar-component-sets")

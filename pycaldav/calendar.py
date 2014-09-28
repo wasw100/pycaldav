@@ -7,10 +7,10 @@ google
 import datetime
 from lxml import etree
 
-from caldav.elements import dav, cdav, nsdav
-from caldav.lib import error, vcal, url
-from caldav.lib.url import URL
-from caldav.objects import Calendar, DAVObject, Event
+from pycaldav.elements import dav, cdav, csdav
+from pycaldav.lib import error, vcal, url
+from pycaldav.lib.url import URL
+from pycaldav.objects import Calendar, DAVObject, Event
 
 
 class CalendarClient(DAVObject):
@@ -31,7 +31,7 @@ class CalendarClient(DAVObject):
         获取ctag, sync-token
         :return: (ctag, token)
         """
-        props = [nsdav.GetCTag(), dav.SyncToken()]
+        props = [csdav.GetCTag(), dav.SyncToken()]
         rc = self.get_properties(props)
         return rc['{http://calendarserver.org/ns/}getctag'], rc['{DAV:}sync-token']
 
@@ -80,8 +80,8 @@ class CalendarClient(DAVObject):
         props = [dav.GetETag(),
                  cdav.CalendarData(),
                  cdav.ScheduleTag(),
-                 nsdav.CreatedBy(),
-                 nsdav.UpdatedBy(),
+                 csdav.CreatedBy(),
+                 csdav.UpdatedBy(),
                  ]
         prop = dav.Prop() + props
 

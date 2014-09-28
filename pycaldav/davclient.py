@@ -7,9 +7,9 @@ import urllib
 import re
 from lxml import etree
 
-from caldav.lib import error
-from caldav.lib.url import URL
-from caldav.objects import Principal
+from pycaldav.lib import error
+from pycaldav.lib.url import URL
+from pycaldav.objects import Principal
 
 
 class DAVResponse:
@@ -95,7 +95,7 @@ class DAVClient:
         Convenience method, it gives a bit more object-oriented feel to
         write client.principal() than Principal(client).
 
-        This method returns a :class:`caldav.Principal` object, with
+        This method returns a :class:`pycaldav.Principal` object, with
         higher-level methods for dealing with the principals
         calendars.
         """

@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 """
-A "DAV object" is anything we get from the caldav server or push into the caldav server, notably principal, calendars and calendar events.
+A "DAV object" is anything we get from the caldav server or push into the pycaldav server, notably principal, calendars and calendar events.
 """
 
 import vobject
@@ -11,9 +11,9 @@ import uuid
 import re
 from lxml import etree
 
-from caldav.lib import error, vcal, url
-from caldav.lib.url import URL
-from caldav.elements import dav, cdav
+from pycaldav.lib import error, vcal, url
+from pycaldav.lib.url import URL
+from pycaldav.elements import dav, cdav, csdav, icaldav
 
 
 class DAVObject(object):
@@ -108,7 +108,7 @@ class DAVObject(object):
 
         ret = self.client.propfind(self.url, body, depth)
         if ret.status == 404:
-            raise error.NotFoundError 
+            raise error.NotFoundError
         return ret
 
     def _get_properties(self, props=[], depth=0):
@@ -216,7 +216,7 @@ class DAVObject(object):
 
 
 class CalendarSet(DAVObject):
-    def calendars(self):
+    def calendars2(self):
         """
         List all calendar collections in this set.
 
@@ -230,6 +230,58 @@ class CalendarSet(DAVObject):
             cals.append(Calendar(self.client, c_url, parent=self))
 
         return cals
+
+    def calendars(self):
+        calendar_tag = cdav.Calendar.tag
+        props = [dav.Propfind(), dav.AddMember(), csdav.AllowedSharingModes(), icaldav.AutoProvisioned(),
+                 icaldav.CalendarColor(), cdav.CalendarDescription(), cdav.CalendarFreeBusySet(),
+                 icaldav.CalendarOrder(), cdav.CalendarTimeZone(), dav.CurrentUserPrivilegeSet(),
+                 cdav.DefaultAlarmVeventDate(), cdav.DefaultAlarmVeventDatetime(), dav.DisplayName(),
+                 csdav.Getctag(), icaldav.LanguageCode(), icaldav.LocationCode(), dav.Owner(),
+                 csdav.PrePublishUrl(), csdav.PublishUrl(), csdav.PushTransports(), csdav.Pushkey(),
+                 dav.QuotaAvailableBytes(), dav.QuotaUsedBytes(), icaldav.RefreshRate(), dav.ResourceId(),
+                 dav.ResourceType(), cdav.ScheduleCalendarTransp(), cdav.ScheduleDefaultCalendarUrl(),
+                 csdav.Source(), csdav.SubscribedStripAlarms(), csdav.SubscribedStripAttachments(),
+                 csdav.SubscribedStripTodos(), cdav.SupportedCalendarComponentSet(),
+                 cdav.SupportedCalendarComponentSets(), dav.SupportedReportSet(), dav.SyncToken()
+        ]
+        depth = 1
+        properties = {}
+
+        response = self._query_properties(props, depth)
+        print 'response', response
+        print response.__dict__
+        print type(response)
+
+        for r in response.tree.findall(dav.Response.tag):
+            # We use canonicalized urls to index children
+            path = r.find(dav.Href.tag).text
+            assert(path)
+            properties[path] = {}
+            for p in props:
+                t = r.find(".//" + p.tag)
+                if len(list(t)) > 0:
+                    if calendar_tag is not None:
+                        val = t.find(".//" + calendar_tag)
+                    else:
+                        val = t.find(".//*")
+                    if val is not None:
+                        val = val.tag
+                    else:
+                        val = None
+                else:
+                    val = t.text
+                properties[path][p.tag] = val
+
+        r = []
+        for path in properties.keys():
+            resource_type = properties[path][dav.ResourceType.tag]
+            #需要的信息
+            if resource_type == calendar_tag or calendar_tag is None:
+                if self.url != self.url.join(path):
+                    props = properties[path]
+                    r.append({'path': path, 'props': props})
+        return r
 
     def make_calendar(self, name=None, cal_id=None):
         return Calendar(self.client, name=name, parent=self, id=cal_id).save()
@@ -288,6 +340,9 @@ class Principal(DAVObject):
             self._calendar_home_set = CalendarSet(self.client, self.client.url.join(URL.objectify(url)))
 
     def calendars(self):
+        """
+        :return dict(), key为calendar的path, value是日历的内容
+        """
         return self.calendar_home_set.calendars()
 
 class Calendar(DAVObject):
@@ -500,7 +555,7 @@ class Event(DAVObject):
 
     def load(self):
         """
-        Load the event from the caldav server.
+        Load the event from the pycaldav server.
         """
         r = self.client.request(self.url)
         if r.status == 404:

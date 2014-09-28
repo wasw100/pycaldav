@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-from caldav.lib.namespace import ns
+from pycaldav.lib.namespace import ns
 from base import BaseElement, ValuedBaseElement
 
 
@@ -71,4 +71,31 @@ class GetETag(BaseElement):
 
 class GetContentType(BaseElement):
     tag = ns("D", 'getcontenttype')
+
+
+class AddMember(BaseElement):
+    tag = ns("D", 'add-member')
+
+
+class CurrentUserPrivilegeSet(BaseElement):
+    tag = ns("D", "current-user-privilege-set")
+
+
+class Owner(BaseElement):
+    tag = ns("D", "owner")
+
+class QuotaAvailableBytes(BaseElement):
+    tag = ns("D", "quota-available-bytes")
+
+
+class QuotaUsedBytes(BaseElement):
+    tag = ns("D", "quota-used-bytes")
+
+
+class ResourceId(BaseElement):
+    tag = ns("D", "resource-id")
+
+
+class SupportedReportSet(BaseElement):
+    tag = ns("D", "supported-report-set")
 

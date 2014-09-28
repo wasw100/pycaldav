@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 from lxml import etree
-from caldav.lib.namespace import nsmap
+from pycaldav.lib.namespace import nsmap
 
 
 class BaseElement(object):
