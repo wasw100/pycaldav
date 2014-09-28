@@ -233,7 +233,7 @@ class CalendarSet(DAVObject):
 
     def calendars(self):
         calendar_tag = cdav.Calendar.tag
-        props = [dav.Propfind(), dav.AddMember(), csdav.AllowedSharingModes(), icaldav.AutoProvisioned(),
+        props = [dav.AddMember(), csdav.AllowedSharingModes(), icaldav.AutoProvisioned(),
                  icaldav.CalendarColor(), cdav.CalendarDescription(), cdav.CalendarFreeBusySet(),
                  icaldav.CalendarOrder(), cdav.CalendarTimeZone(), dav.CurrentUserPrivilegeSet(),
                  cdav.DefaultAlarmVeventDate(), cdav.DefaultAlarmVeventDatetime(), dav.DisplayName(),
