@@ -555,7 +555,7 @@ class Event(DAVObject):
 
     def load(self):
         """
-        Load the event from the pycaldav server.
+        Load the event from the caldav server.
         """
         r = self.client.request(self.url)
         if r.status == 404:
