@@ -260,19 +260,14 @@ class CalendarSet(DAVObject):
         """
         lxml.etree._Element对象转化为dict,用于calendars()方法
         """
-        print '调用这个方法'
-
         if element is None:
             return
 
         tag = element.tag
 
-        print tag, len(element), element
-
         result = {}
         if len(element) == 0:
             if element.text is None:
-                print 'element.text is None, return-%s' % tag
                 return tag
             else:
                 result[tag] = element.text
@@ -281,7 +276,6 @@ class CalendarSet(DAVObject):
             val = self.get_dict_from_element(element.getchildren()[0])
             result[tag] = val
             return result
-
 
         result = {}
         children_result = {}
