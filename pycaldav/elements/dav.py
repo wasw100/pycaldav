@@ -81,6 +81,10 @@ class CurrentUserPrivilegeSet(BaseElement):
     tag = ns("D", "current-user-privilege-set")
 
 
+class Privilege(BaseElement):
+    tag = ns("D", "privilege")
+
+
 class Owner(BaseElement):
     tag = ns("D", "owner")
 
