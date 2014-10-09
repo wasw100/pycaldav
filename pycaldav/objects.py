@@ -216,20 +216,6 @@ class DAVObject(object):
 
 
 class CalendarSet(DAVObject):
-    def calendars2(self):
-        """
-        List all calendar collections in this set.
-
-        Returns:
-         * [Calendar(), ...]
-        """
-        cals = []
-
-        data = self.children(cdav.Calendar.tag)
-        for c_url, c_type in data:
-            cals.append(Calendar(self.client, c_url, parent=self))
-
-        return cals
 
     def calendars(self):
         props = [
@@ -264,20 +250,61 @@ class CalendarSet(DAVObject):
             if calendar_tag is None:
                 continue
 
-            for p in props:
-                t = r.find(".//" + p.tag)
+            prop = r.find('.//%s' % dav.Prop.tag)
+            calendar_d.update(self.get_dict_from_element(prop).get(dav.Prop.tag))
 
-                if len(t) > 0:
-                    val = t.find(".//*")
-                    if val is not None:
-                        val = val.tag
-                    else:
-                        val = None
-                else:
-                    val = t.text
-                calendar_d[p.tag] = val
             data.append(calendar_d)
         return data
+
+    def get_dict_from_element(self, element):
+        """
+        lxml.etree._Element对象转化为dict,用于calendars()方法
+        """
+        print '调用这个方法'
+
+        if element is None:
+            return
+
+        tag = element.tag
+
+        print tag, len(element), element
+
+        result = {}
+        if len(element) == 0:
+            if element.text is None:
+                print 'element.text is None, return-%s' % tag
+                return tag
+            else:
+                result[tag] = element.text
+                return result
+        elif len(element) == 1:
+            val = self.get_dict_from_element(element.getchildren()[0])
+            result[tag] = val
+            return result
+
+
+        result = {}
+        children_result = {}
+        for children in element.getchildren():
+            children_tag = children.tag
+            recursion_result = self.get_dict_from_element(children)
+            children_list = children_result.setdefault(children_tag, [])
+            if isinstance(recursion_result, dict):
+                children_list.append(recursion_result.get(children_tag))
+            else:
+                children_list.append(recursion_result)
+
+        for key, value in children_result.items():
+            if len(value) == 0:
+                children_result[key] = None
+            elif len(value) == 1:
+                children_result[key] = value[0]
+
+
+        result[tag] = children_result
+
+        return result
+
 
     def make_calendar(self, name=None, cal_id=None):
         return Calendar(self.client, name=name, parent=self, id=cal_id).save()
